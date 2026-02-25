@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
+const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
+const siteUrl = raw.startsWith("http") ? raw : `https://${raw}`;
 
 export default function sitemap(): MetadataRoute.Sitemap {
     return [

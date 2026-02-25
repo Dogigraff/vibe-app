@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { TelegramInitProvider } from "@/components/providers/TelegramInitProvider";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
+const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
+const siteUrl = raw.startsWith("http") ? raw : `https://${raw}`;
 
 export const metadata: Metadata = {
   title: "VIBE — Find Your Vibe in 5 Minutes",

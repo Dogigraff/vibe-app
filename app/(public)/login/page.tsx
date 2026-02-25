@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   isTelegramWebApp,
   getTelegramInitData,
@@ -10,13 +9,16 @@ import {
 } from "@/lib/telegram";
 
 const IS_DEV_TG_MOCK = process.env.NEXT_PUBLIC_DEV_TG_MOCK === "true";
+const BOT_USERNAME =
+  process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || "vibe_bot";
+const TELEGRAM_BOT_LINK = `https://t.me/${BOT_USERNAME}`;
 
 export default function LoginPage() {
   const router = useRouter();
   const [telegramDetected, setTelegramDetected] = useState<boolean | null>(null);
   const [initDataLength, setInitDataLength] = useState<number | null>(null);
   const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error" | "mock_loading"
+    "idle" | "loading" | "success" | "error" | "mock_loading" | "telegram_web_fallback"
   >("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -34,9 +36,8 @@ export default function LoginPage() {
     }
 
     setStatus("loading");
-    if (!initData) {
-      setStatus("error");
-      setErrorMsg("init_data_missing");
+    if (!initData || !getTelegramUser()) {
+      setStatus("telegram_web_fallback");
       return;
     }
 
@@ -53,13 +54,27 @@ export default function LoginPage() {
           return;
         }
         const tgUser = getTelegramUser();
-        if (tgUser) {
-          await fetch("/api/profile/sync", {
+        const initDataNow = getTelegramInitData();
+        if (tgUser && initDataNow) {
+          const syncRes = await fetch("/api/profile/sync", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ telegramUser: tgUser }),
             credentials: "include",
           });
+          if (syncRes.status === 401) {
+            const syncData = (await syncRes.json()) as { error?: string };
+            if (
+              syncData.error === "telegram_init_data_missing" ||
+              syncData.error === "telegram_init_data_invalid"
+            ) {
+              setStatus("telegram_web_fallback");
+              return;
+            }
+          }
+        } else {
+          setStatus("telegram_web_fallback");
+          return;
         }
         setStatus("success");
         router.replace("/map");
@@ -138,6 +153,34 @@ export default function LoginPage() {
     }
   };
 
+  if (status === "telegram_web_fallback") {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-6">
+        <div className="w-full max-w-sm space-y-6 text-center">
+          <h1 className="text-2xl font-bold">Откройте в Telegram</h1>
+          <p className="text-sm text-muted-foreground">
+            Telegram Web может не поддерживать авторизацию. Откройте приложение в Telegram Desktop или мобильном приложении.
+          </p>
+          <a
+            href={TELEGRAM_BOT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-md bg-[#0088cc] px-4 py-3 text-sm font-medium text-white hover:bg-[#007ab8]"
+          >
+            Открыть в Telegram
+          </a>
+          <button
+            type="button"
+            onClick={() => router.replace("/login")}
+            className="block w-full text-sm text-muted-foreground underline underline-offset-4"
+          >
+            Повторить
+          </button>
+        </div>
+      </main>
+    );
+  }
+
   if (status === "error") {
     const isInitDataMissing = errorMsg === "init_data_missing";
     return (
@@ -159,21 +202,18 @@ export default function LoginPage() {
             </p>
           )}
           {isInitDataMissing && (
-            <div className="space-y-2 text-left text-sm">
-              <p className="text-muted-foreground">
-                You must open via Telegram Menu Button using a public HTTPS
-                URL. Localhost does not provide initData.
-              </p>
-              <p>
-                isTelegramWebApp: {String(telegramDetected)}, initData length:{" "}
-                {initDataLength ?? 0}
-              </p>
-              <Link
-                href="/tg-debug"
-                className="block text-primary underline underline-offset-4"
+            <div className="space-y-3">
+              <a
+                href={TELEGRAM_BOT_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md bg-[#0088cc] px-4 py-3 text-sm font-medium text-white hover:bg-[#007ab8]"
               >
-                Open /tg-debug for diagnostics
-              </Link>
+                Открыть в Telegram
+              </a>
+              <p className="text-xs text-muted-foreground">
+                Откройте через Menu Button бота в Telegram Desktop или мобильном приложении.
+              </p>
             </div>
           )}
           {IS_DEV_TG_MOCK && isInitDataMissing && (
