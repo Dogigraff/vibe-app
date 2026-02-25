@@ -16,9 +16,11 @@ export async function createClient() {
         },
         setAll(cookiesToSet: { name: string; value: string; options?: CookieOptionsWithName }[]) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
+            cookiesToSet.forEach(({ name, value, options }) => {
+              // SameSite=None + Secure для работы в Telegram WebView (iframe)
+              const merged = { ...options, sameSite: "none" as const, secure: true };
+              cookieStore.set(name, value, merged);
+            });
           } catch {
             // Called from Server Component
           }
