@@ -6,10 +6,13 @@ const BOT_LINK =
 
 export function OpenInTelegram() {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const openTelegramLink = typeof window !== "undefined" && window.Telegram?.WebApp?.openTelegramLink;
-    if (openTelegramLink) {
+    const wa =
+      typeof window !== "undefined"
+        ? (window.Telegram?.WebApp as { openTelegramLink?: (url: string) => void } | undefined)
+        : undefined;
+    if (wa?.openTelegramLink) {
       e.preventDefault();
-      openTelegramLink(BOT_LINK);
+      wa.openTelegramLink(BOT_LINK);
     }
   };
 
