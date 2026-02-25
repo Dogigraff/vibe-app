@@ -10,10 +10,10 @@ import { ReportButton } from "@/features/security/ReportButton";
 
 const MOSCOW_CENTER: [number, number] = [55.751244, 37.618423];
 const RADIUS_M = 15000;
-const IS_DEV_TEST_MODE =
-  process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true";
+// Dev Debug: только локально при dev test mode. В production (npm run build) никогда не показывается.
 const SHOW_DEV_DEBUG =
-  IS_DEV_TEST_MODE && process.env.NODE_ENV !== "production";
+  process.env.NODE_ENV !== "production" &&
+  process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true";
 const DEBOUNCE_METERS = 300;
 const DEG_LAT_TO_M = 111320;
 const DEG_LNG_TO_M_55 = 64000;
@@ -173,7 +173,8 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
     typeof process !== "undefined"
       ? process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY
       : "";
-  const useFakeMap = IS_DEV_TEST_MODE || !apiKey;
+  const useFakeMap =
+    process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true" || !apiKey;
 
   const [devLastJson, setDevLastJson] = useState<string>("{}");
   const fetchDevHealth = useCallback(async () => {
