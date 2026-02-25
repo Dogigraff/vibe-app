@@ -42,7 +42,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet: { name: string; value: string; options?: CookieOptionsWithName }[]) {
-          const mergedOpts = { sameSite: "none" as const, secure: true };
+          const mergedOpts = { sameSite: "none" as const, secure: true, partitioned: true };
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
