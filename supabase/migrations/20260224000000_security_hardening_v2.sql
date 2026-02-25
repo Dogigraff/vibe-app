@@ -86,7 +86,7 @@ BEGIN
         WHERE id = NEW.reported_id;
 
         -- Log for moderation
-        INSERT INTO public.moderation_events (user_id, event_type, reason)
+        INSERT INTO public.moderation_events (target_id, action, reason)
         VALUES (NEW.reported_id, 'shadow_ban_auto', 'Threshold of 5 reports reached');
     END IF;
 
@@ -108,14 +108,14 @@ CREATE POLICY members_read_messages_v3 ON public.messages
       -- Sender is not shadow-banned
       NOT EXISTS (
         SELECT 1 FROM public.profiles
-        WHERE id = messages.sender_id
+        WHERE id = messages.user_id
         AND shadow_banned_until > now()
       )
-      OR sender_id = auth.uid() -- Can always see own messages
+      OR messages.user_id = auth.uid() -- Can always see own messages
     )
   );
 
 -- Enforce security definer security on existing RPCs
 ALTER FUNCTION public.allow_action(UUID, TEXT, INT, INT) SET search_path = public, pg_temp;
-ALTER FUNCTION public.create_party(TEXT, TEXT, GEOMETRY) SET search_path = public, pg_temp;
-ALTER FUNCTION public.get_nearby_parties(GEOMETRY, DOUBLE PRECISION) SET search_path = public, pg_temp;
+ALTER FUNCTION public.create_party(DOUBLE PRECISION, DOUBLE PRECISION, TEXT, TEXT, TEXT, INT) SET search_path = public, pg_temp;
+ALTER FUNCTION public.get_nearby_parties(DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION, BOOLEAN, UUID) SET search_path = public, pg_temp;
