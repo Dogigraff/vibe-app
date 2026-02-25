@@ -1,0 +1,10 @@
+﻿GPT_REVUE_SECURITY_BUNDLE
+Built: 2026-02-24 12:05
+
+SIGN-OFF CHECKLIST:
+- NOTE: messages/route.ts contains "content" only in REJECTION block (line ~70:
+  if ("content" in b) return error). The .insert() uses ciphertext, nonce, e2e_version.
+- middleware: matcher excludes static assets
+- features/chat/PartyChat.tsx: 21098 bytes
+- supabase/migrations: 12 SQL files
+- app/api/parties/messages: E2E ciphertext-only (rejects plaintext content)
