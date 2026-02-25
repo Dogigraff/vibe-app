@@ -7,6 +7,16 @@ const protectedPaths = ["/map", "/profile"];
 const noindexPaths = ["/map", "/profile", "/login", "/tg-debug"];
 
 export async function updateSession(request: NextRequest) {
+  // Production: hide /tg-debug (debug page)
+  if (request.nextUrl.pathname === "/tg-debug") {
+    if (
+      process.env.NODE_ENV === "production" ||
+      process.env.NEXT_PUBLIC_DEV_TEST_MODE !== "true"
+    ) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
   // DEV ONLY: skip auth check for protected routes when dev test mode is on
   if (process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true") {
     return applyNoindex(request, NextResponse.next({ request }));

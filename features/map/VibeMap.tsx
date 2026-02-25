@@ -12,6 +12,8 @@ const MOSCOW_CENTER: [number, number] = [55.751244, 37.618423];
 const RADIUS_M = 15000;
 const IS_DEV_TEST_MODE =
   process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true";
+const SHOW_DEV_DEBUG =
+  IS_DEV_TEST_MODE && process.env.NODE_ENV !== "production";
 const DEBOUNCE_METERS = 300;
 const DEG_LAT_TO_M = 111320;
 const DEG_LNG_TO_M_55 = 64000;
@@ -199,7 +201,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
             setSelectedParty={setSelectedParty}
           />
         </div>
-        {IS_DEV_TEST_MODE && (
+        {SHOW_DEV_DEBUG && (
           <div className="shrink-0 border-t bg-muted/30 p-2">
             <p className="mb-2 text-xs font-medium text-muted-foreground">
               Dev Debug
