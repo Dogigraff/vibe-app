@@ -1,8 +1,9 @@
-import { Telegraf } from "telegraf";
+import { Telegraf, Markup } from "telegraf";
 import "dotenv/config";
 
 const token = process.env.BOT_TOKEN;
 const webappUrl = process.env.WEBAPP_URL || "https://vibe-app-mu.vercel.app";
+const DEEPLINK = "https://t.me/vibe_aurapp_bot?start=vibe";
 
 if (!token) {
   console.error("BOT_TOKEN is required. Create .env with BOT_TOKEN=...");
@@ -11,80 +12,58 @@ if (!token) {
 
 const bot = new Telegraf(token);
 
-const HELP_TEXT = `VIBE — геосоциальная сеть. Как это работает:
+const HELP_TEXT = `Как это работает:
 
 1. Открой приложение (кнопка ниже)
 2. Включи геолокацию
 3. Создай vibe или смотри активные рядом
-4. Стучись к интересным — общайся в чате
+4. Общайся в чате — всё за 5 минут.`;
 
-Всё происходит за 5 минут. Без регистраций вне Telegram.`;
+const openVibeKeyboard = () =>
+  Markup.inlineKeyboard([
+    [Markup.button.webApp("Открыть VIBE", webappUrl)],
+  ]);
 
 bot.start(async (ctx) => {
   await ctx.reply(
-    "VIBE — найди людей рядом за 5 минут.\n\nНажми кнопку ниже.",
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "Открыть VIBE",
-              web_app: { url: webappUrl },
-            },
-          ],
-          [
-            { text: "Как работает", callback_data: "how_it_works" },
-            { text: "Поделиться", callback_data: "share" },
-          ],
-        ],
-      },
-    }
+    "VIBE — найди людей рядом за 5 минут.\nНажми кнопку ниже, чтобы открыть Mini App.",
+    Markup.inlineKeyboard([
+      [Markup.button.webApp("Открыть VIBE", webappUrl)],
+      [
+        Markup.button.callback("Как работает", "how_it_works"),
+        Markup.button.callback("Поделиться", "share"),
+      ],
+      [Markup.button.callback("Поддержка", "support")],
+    ])
   );
 });
 
 bot.help(async (ctx) => {
-  await ctx.reply(HELP_TEXT, {
-    reply_markup: {
-      inline_keyboard: [
-        [
-          {
-            text: "Открыть VIBE",
-            web_app: { url: webappUrl },
-          },
-        ],
-      ],
-    },
-  });
+  await ctx.reply(HELP_TEXT, openVibeKeyboard());
 });
 
 bot.action("how_it_works", async (ctx) => {
   await ctx.answerCbQuery();
-  await ctx.reply(HELP_TEXT);
+  await ctx.reply(HELP_TEXT, openVibeKeyboard());
 });
 
 bot.action("share", async (ctx) => {
   await ctx.answerCbQuery();
-  const botInfo = await bot.telegram.getMe();
-  const username = botInfo.username || "vibe_bot";
   await ctx.reply(
-    `Поделиться VIBE с друзьями:\n\nОтправь им ссылку на бота:\nhttps://t.me/${username}\n\nИли открой бота и нажми «Поделиться» в меню — выбери чат.`,
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "Открыть VIBE",
-              web_app: { url: webappUrl },
-            },
-          ],
-        ],
-      },
-    }
+    `Ссылка для друзей:\n${DEEPLINK}`,
+    Markup.inlineKeyboard([
+      [Markup.button.url("Открыть ссылку", DEEPLINK)],
+    ])
   );
 });
 
+bot.action("support", async (ctx) => {
+  await ctx.answerCbQuery();
+  await ctx.reply("Напиши сюда, отвечу.");
+});
+
 bot.launch().then(() => {
-  console.log("VIBE bot started");
+  console.log("VIBE bot started (@vibe_aurapp_bot)");
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
