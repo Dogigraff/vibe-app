@@ -20,7 +20,7 @@
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | (anon key JWT) | Уже есть |
 | `SUPABASE_SERVICE_ROLE_KEY` | (service_role JWT) | **Исправить** — взять из Dashboard |
 | `NEXT_PUBLIC_SITE_URL` | `https://твой-проект.vercel.app` | URL после деплоя |
-| `TELEGRAM_AUTH_SECRET` | (32 hex chars) | Секрет для Telegram Login |
+| `TELEGRAM_AUTH_SECRET` | (64 hex chars) | Секрет для synthetic users, см. docs/TELEGRAM_SETUP.md |
 | `NEXT_PUBLIC_YANDEX_MAPS_API_KEY` | (API key) | Для карт |
 | `RATE_LIMIT_MESSAGES_WINDOW_S` | `10` | Опционально |
 | `RATE_LIMIT_MESSAGES_MAX` | `5` | Опционально |
@@ -31,9 +31,11 @@
 - **Site URL:** `https://твой-проект.vercel.app`
 - **Redirect URLs:** `https://твой-проект.vercel.app/**`
 
-## 4. Telegram Bot — домен
+## 4. Telegram Bot — Menu Button
 
-В **@BotFather** → Bot Settings → set domain: `твой-проект.vercel.app`
+В **@BotFather** → /mybots → твой бот → Bot Settings → Menu Button → Configure menu button → ввести `https://твой-проект.vercel.app`
+
+Подробнее: **docs/TELEGRAM_SETUP.md**
 
 ## 5. Деплой
 

@@ -1,5 +1,7 @@
 # VIBE — Telegram Mini App
 
+> **Настройка Telegram:** см. [docs/TELEGRAM_SETUP.md](docs/TELEGRAM_SETUP.md)
+
 Real-time geo-social network. "Don't be lonely. Find your vibe in 5 minutes."
 
 ## Стек

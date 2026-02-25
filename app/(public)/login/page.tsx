@@ -153,6 +153,11 @@ export default function LoginPage() {
                   ? "Ошибка сети. Попробуйте снова."
                   : "Не удалось войти. Попробуйте позже."}
           </p>
+          {errorMsg && errorMsg !== "telegram_only" && errorMsg !== "init_data_missing" && errorMsg !== "network_error" && (
+            <p className="text-xs text-muted-foreground/80 font-mono break-all">
+              Код: {errorMsg}
+            </p>
+          )}
           {isInitDataMissing && (
             <div className="space-y-2 text-left text-sm">
               <p className="text-muted-foreground">

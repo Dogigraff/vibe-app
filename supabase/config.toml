@@ -1,1 +1,18 @@
-c:\Users\user\Downloads\vibe-app\review_bundle_v3\supabase\config.toml
+# Supabase local config - minimal for migrations
+# For remote: use supabase link + db push
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+
+[db]
+port = 54322
+major_version = 15
+
+[db.migrations]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323

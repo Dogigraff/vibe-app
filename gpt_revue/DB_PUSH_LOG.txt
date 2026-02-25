@@ -1,0 +1,27 @@
+=============================================================================
+DB PUSH LOG — Production Supabase migrations
+=============================================================================
+Project ref: modicqcpmtrzptyhysga
+Date: 2026-02-25
+Method: Manual application via Supabase MCP execute_sql
+        (supabase db push not used — SUPABASE_ACCESS_TOKEN not configured)
+=============================================================================
+
+Applied migrations (in order):
+1. 20260213052612 — v3 schema (profiles, parties, party_members, messages, ...)
+2. 20260213052619 — v3 RLS policies
+3. 20260213052625 — profiles trigger handle_new_user
+4. 20260213120000 — v3 RLS and schema patches
+5. 20260213070000 — get_nearby_parties
+6. 20260213130000 — get_nearby_parties invoker comment
+7. 20260213190000 — create_party RPC
+8. 20260223200000 — RLS e2e reports
+9. 20260223210000 — rate_limits + allow_action(uuid,text,integer,integer)
+10. 20260223220000 — e2e encryption columns (messages, party_room_keys, user_devices)
+11. 20260223230000 — moderation (moderation_events, reports target_type, check_shadow_ban)
+12. 20260224000000 — security_hardening_v2 (members_insert_room_keys_v2, members_read_messages_v3, ensure_party_room_key, check_shadow_ban target_type, ALTER FUNCTION search_path)
+
+No errors during application.
+All INSERTs into supabase_migrations.schema_migrations completed.
+
+=============================================================================
