@@ -9,6 +9,9 @@ export function ProfileKeepAlive() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    const initData = typeof window !== "undefined" ? window.Telegram?.WebApp?.initData : undefined;
+    if (!initData || initData.length < 20) return;
+
     const tgUser = getTelegramUser();
     if (!tgUser) return;
 

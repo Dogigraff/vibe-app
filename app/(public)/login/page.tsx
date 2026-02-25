@@ -7,6 +7,7 @@ import {
   getTelegramInitData,
   getTelegramUser,
 } from "@/lib/telegram";
+import { OpenInTelegram } from "@/components/OpenInTelegram";
 
 const IS_DEV_TG_MOCK = process.env.NEXT_PUBLIC_DEV_TG_MOCK === "true";
 const BOT_USERNAME =
@@ -26,7 +27,7 @@ export default function LoginPage() {
     const isTg = isTelegramWebApp();
     setTelegramDetected(isTg);
 
-    const initData = getTelegramInitData();
+    const initData = typeof window !== "undefined" ? window.Telegram?.WebApp?.initData : undefined;
     setInitDataLength(initData?.length ?? 0);
 
     if (!isTg) {
@@ -35,11 +36,12 @@ export default function LoginPage() {
       return;
     }
 
-    setStatus("loading");
-    if (!initData || !getTelegramUser()) {
+    if (!initData || initData.length < 20) {
       setStatus("telegram_web_fallback");
       return;
     }
+
+    setStatus("loading");
 
     fetch("/api/auth/telegram", {
       method: "POST",
@@ -154,31 +156,7 @@ export default function LoginPage() {
   };
 
   if (status === "telegram_web_fallback") {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-6">
-        <div className="w-full max-w-sm space-y-6 text-center">
-          <h1 className="text-2xl font-bold">Откройте в Telegram</h1>
-          <p className="text-sm text-muted-foreground">
-            Telegram Web может не поддерживать авторизацию. Откройте приложение в Telegram Desktop или мобильном приложении.
-          </p>
-          <a
-            href={TELEGRAM_BOT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-md bg-[#0088cc] px-4 py-3 text-sm font-medium text-white hover:bg-[#007ab8]"
-          >
-            Открыть в Telegram
-          </a>
-          <button
-            type="button"
-            onClick={() => router.replace("/login")}
-            className="block w-full text-sm text-muted-foreground underline underline-offset-4"
-          >
-            Повторить
-          </button>
-        </div>
-      </main>
-    );
+    return <OpenInTelegram />;
   }
 
   if (status === "error") {
