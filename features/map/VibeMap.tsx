@@ -10,9 +10,9 @@ import { ReportButton } from "@/features/security/ReportButton";
 
 const MOSCOW_CENTER: [number, number] = [55.751244, 37.618423];
 const RADIUS_M = 15000;
-// Dev Debug: только локально при dev test mode. В production (npm run build) никогда не показывается.
+// Dev Debug: только когда не production. Двойная проверка через next.config env.
 const SHOW_DEV_DEBUG =
-  process.env.NODE_ENV !== "production" &&
+  process.env.NEXT_PUBLIC_IS_PRODUCTION !== "true" &&
   process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true";
 const DEBOUNCE_METERS = 300;
 const DEG_LAT_TO_M = 111320;

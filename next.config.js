@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  env: {
+    NEXT_PUBLIC_IS_PRODUCTION: process.env.NODE_ENV === "production" ? "true" : "false",
+  },
   compress: true,
   images: {
     formats: ["image/avif", "image/webp"],
