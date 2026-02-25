@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  isTelegramWebApp,
-  getTelegramInitData,
-  getTelegramUser,
-} from "@/lib/telegram";
+import { isTelegramWebApp, getTelegramUser } from "@/lib/telegram";
 import { OpenInTelegram } from "@/components/OpenInTelegram";
 
 const IS_DEV_TG_MOCK = process.env.NEXT_PUBLIC_DEV_TG_MOCK === "true";
@@ -56,8 +52,12 @@ export default function LoginPage() {
           return;
         }
         const tgUser = getTelegramUser();
-        const initDataNow = getTelegramInitData();
-        if (tgUser && initDataNow) {
+        const initDataNow = typeof window !== "undefined" ? window.Telegram?.WebApp?.initData : undefined;
+        if (!initDataNow || initDataNow.length < 20) {
+          setStatus("telegram_web_fallback");
+          return;
+        }
+        if (tgUser) {
           const syncRes = await fetch("/api/profile/sync", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
