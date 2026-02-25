@@ -57,6 +57,11 @@ export default function LoginPage() {
           setStatus("telegram_web_fallback");
           return;
         }
+        const inIframe = typeof window !== "undefined" && window !== window.top;
+        if (inIframe) {
+          setStatus("telegram_web_fallback");
+          return;
+        }
         if (tgUser) {
           const syncRes = await fetch("/api/profile/sync", {
             method: "POST",

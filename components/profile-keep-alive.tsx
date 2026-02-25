@@ -5,17 +5,23 @@ import { getTelegramUser } from "@/lib/telegram";
 
 const INTERVAL_MS = 60_000;
 
+function hasValidInitData(): boolean {
+  if (typeof window === "undefined") return false;
+  const initData = window.Telegram?.WebApp?.initData;
+  return !!(initData && initData.length >= 20);
+}
+
 export function ProfileKeepAlive() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const initData = typeof window !== "undefined" ? window.Telegram?.WebApp?.initData : undefined;
-    if (!initData || initData.length < 20) return;
+    if (!hasValidInitData()) return;
 
     const tgUser = getTelegramUser();
     if (!tgUser) return;
 
     const sync = () => {
+      if (!hasValidInitData()) return;
       fetch("/api/profile/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
