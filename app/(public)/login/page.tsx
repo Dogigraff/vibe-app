@@ -6,9 +6,9 @@ import { isTelegramWebApp, getTelegramUser } from "@/lib/telegram";
 import { OpenInTelegram } from "@/components/OpenInTelegram";
 
 const IS_DEV_TG_MOCK = process.env.NEXT_PUBLIC_DEV_TG_MOCK === "true";
-const BOT_USERNAME =
-  process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || "vibe_bot";
-const TELEGRAM_BOT_LINK = `https://t.me/${BOT_USERNAME}`;
+const TELEGRAM_BOT_LINK =
+  process.env.NEXT_PUBLIC_TELEGRAM_BOT_LINK ||
+  "https://t.me/vibe_aurapp_bot?start=vibe";
 
 export default function LoginPage() {
   const router = useRouter();

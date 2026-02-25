@@ -11,6 +11,7 @@ declare global {
         initDataUnsafe: {
           user?: TelegramUser;
         };
+        openTelegramLink?: (url: string) => void;
       };
     };
   }
