@@ -1,51 +1,33 @@
 # VIBE Telegram Bot (@vibe_aurapp_bot)
 
-Бот для приветствия, запуска Mini App и шаринга.
+> ⚠️ **ЗАПУСКАЙ БОТА ИЗ ПАПКИ bot/**
+>
+> Не запускай `npm start` из корня репо — это Next.js. Бот живёт только в `bot/`.
 
-## Установка
+## Windows PowerShell
 
-```bash
+```powershell
 cd bot
+copy .env.example .env
+notepad .env   # вставить BOT_TOKEN от @BotFather
 npm install
-```
-
-## Настройка
-
-Скопируй `.env.example` в `.env`:
-
-```bash
-cp .env.example .env
-```
-
-Заполни переменные:
-
-| Переменная   | Описание                    | По умолчанию                          |
-|-------------|-----------------------------|----------------------------------------|
-| `BOT_TOKEN` | Токен от @BotFather         | обязательна                            |
-| `WEBAPP_URL`| URL Mini App               | `https://vibe-app-mu.vercel.app`       |
-
-## Запуск
-
-```bash
 npm start
 ```
 
-С авто-перезагрузкой при изменениях:
+Должно вывести `BOT RUNNING` — значит бот работает.
 
-```bash
-npm run dev
-```
+## Переменные
 
-## Команды и кнопки
+| Переменная   | Описание              | По умолчанию                          |
+|-------------|------------------------|----------------------------------------|
+| `BOT_TOKEN` | Токен от @BotFather   | обязательна                            |
+| `WEBAPP_URL`| URL Mini App          | `https://vibe-app-mu.vercel.app`       |
 
-- **/start** — питч + большая кнопка «Открыть VIBE» (WebApp), «Как работает», «Поделиться», «Поддержка»
-- **/help** — краткая инструкция (3–5 строк) + кнопка «Открыть VIBE»
+## Команды
 
-**Callback-кнопки:**
-- «Как работает» → инструкция + «Открыть VIBE»
-- «Поделиться» → ссылка `https://t.me/vibe_aurapp_bot?start=vibe` + кнопка «Открыть ссылку»
-- «Поддержка» → контакт
+- `/start` — текст + кнопки «Открыть VIBE» (WebApp), «Как работает», «Поделиться»
+- `/help` — инструкция + кнопка «Открыть VIBE»
 
 ## Деплой
 
-Бот работает на Node.js 18+. Деплой на VPS или Railway, Render, Fly.io. Укажи `BOT_TOKEN` и `WEBAPP_URL` в переменных окружения.
+Node.js 18+. Railway, Render, Fly.io. Укажи `BOT_TOKEN` и `WEBAPP_URL`.

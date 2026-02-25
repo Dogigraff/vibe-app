@@ -6,7 +6,7 @@ const webappUrl = process.env.WEBAPP_URL || "https://vibe-app-mu.vercel.app";
 const DEEPLINK = "https://t.me/vibe_aurapp_bot?start=vibe";
 
 if (!token) {
-  console.error("BOT_TOKEN is required. Create .env with BOT_TOKEN=...");
+  console.error("BOT_TOKEN is required. Create bot/.env with BOT_TOKEN=...");
   process.exit(1);
 }
 
@@ -30,10 +30,9 @@ bot.start(async (ctx) => {
     Markup.inlineKeyboard([
       [Markup.button.webApp("Открыть VIBE", webappUrl)],
       [
-        Markup.button.callback("Как работает", "how_it_works"),
+        Markup.button.callback("Как работает", "how"),
         Markup.button.callback("Поделиться", "share"),
       ],
-      [Markup.button.callback("Поддержка", "support")],
     ])
   );
 });
@@ -42,7 +41,7 @@ bot.help(async (ctx) => {
   await ctx.reply(HELP_TEXT, openVibeKeyboard());
 });
 
-bot.action("how_it_works", async (ctx) => {
+bot.action("how", async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.reply(HELP_TEXT, openVibeKeyboard());
 });
@@ -57,13 +56,15 @@ bot.action("share", async (ctx) => {
   );
 });
 
-bot.action("support", async (ctx) => {
-  await ctx.answerCbQuery();
-  await ctx.reply("Напиши сюда, отвечу.");
-});
+async function main() {
+  await bot.telegram.deleteWebhook({ drop_pending_updates: true });
+  await bot.launch();
+  console.log("BOT RUNNING");
+}
 
-bot.launch().then(() => {
-  console.log("VIBE bot started (@vibe_aurapp_bot)");
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
 });
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
