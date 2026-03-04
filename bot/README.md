@@ -30,4 +30,7 @@ npm start
 
 ## Деплой
 
-Node.js 18+. Railway, Render, Fly.io. Укажи `BOT_TOKEN` и `WEBAPP_URL`.
+Node.js 18+. Укажи `BOT_TOKEN` и `WEBAPP_URL`.
+
+- **Timeweb Cloud** — пошаговая инструкция: [docs/TIMEWEB_BOT_DEPLOY.md](../docs/TIMEWEB_BOT_DEPLOY.md)
+- **Railway, Render, Fly.io** — аналогично: `npm install` → `npm start`, переменные в env.
