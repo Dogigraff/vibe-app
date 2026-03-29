@@ -47,13 +47,26 @@ export async function POST(request: Request) {
     const username = telegramUser.username
       ? `@${telegramUser.username.replace(/^@/, "")}`
       : `tg_${telegramUser.id}`;
-    const avatar_url = telegramUser.photo_url ?? null;
+
+    // Get current profile to avoid overwriting custom avatars
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .single<any>();
+
+    const isCustomAvatar = existingProfile?.avatar_url?.includes("object/public/avatars");
 
     const payload: TablesUpdate<"profiles"> = {
       username,
-      avatar_url,
       last_active_at: new Date().toISOString(),
     };
+
+    // Only sync Telegram avatar if they don't have a custom one
+    if (!isCustomAvatar) {
+      payload.avatar_url = telegramUser.photo_url ?? null;
+    }
+
     const { error } = await supabase
       .schema("public")
       .from("profiles")

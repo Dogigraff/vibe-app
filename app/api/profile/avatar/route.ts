@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 
@@ -69,6 +70,11 @@ export async function POST(request: Request) {
       console.error("Profile update error:", profileUpdateError);
       return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
     }
+
+    // Force Next.js to clear the cache for the profile page
+    // so returning to it from another page doesn't show old db state
+    revalidatePath("/profile");
+    revalidatePath("/map");
 
     return NextResponse.json({ url: avatarUrl });
   } catch (error: any) {
