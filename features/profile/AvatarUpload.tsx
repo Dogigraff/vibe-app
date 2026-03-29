@@ -79,16 +79,18 @@ export function AvatarUpload({
         </div>
       )}
 
-      {/* Editing overlay icon */}
+      {/* Очевидная иконка фотоаппарата снизу справа */}
       {!disabled && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-          <Camera className="h-6 w-6 text-white" />
+        <div className="absolute bottom-0 right-0 z-20 rounded-full bg-primary p-2 text-primary-foreground shadow-lg border-2 border-background">
+          <Camera className="h-4 w-4" />
         </div>
       )}
 
+      {/* Убрали старый Editing overlay icon с hover, он не нужен на смартфонах */}
+
       {/* Uploading loader */}
       {uploading && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
+        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-sm">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
         </div>
       )}
@@ -101,8 +103,8 @@ export function AvatarUpload({
           onChange={handleFileChange}
           accept="image/*"
           aria-label="Загрузить аватар"
-          className="absolute inset-0 h-full w-full cursor-pointer opacity-0 z-10"
-          title=""
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0 z-40"
+          title="Изменить фото профиля"
         />
       )}
     </div>

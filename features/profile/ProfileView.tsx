@@ -92,11 +92,10 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
             className="absolute inset-0 rounded-full bg-gradient-to-br from-vibe-accent via-vibe-accent-soft to-vibe-accent opacity-90"
             aria-hidden
           />
-          <div className="relative rounded-full p-[3px]">
+          <div className="relative rounded-full p-[3px] group cursor-pointer">
             <AvatarUpload
               currentUrl={localAvatarUrl}
               username={profile.username || ""}
-              disabled={!editing}
               onSuccess={(url) => setLocalAvatarUrl(url)}
             />
           </div>
