@@ -67,7 +67,7 @@ export function MapShell() {
               size="sm"
               onClick={() => setModalOpen(true)}
             >
-              + Create vibe
+              + Создать вайб
             </Button>
           </div>
           <span className="text-xs text-muted-foreground">15 км</span>

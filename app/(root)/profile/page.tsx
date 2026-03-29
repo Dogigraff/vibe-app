@@ -24,5 +24,17 @@ export default async function ProfilePage() {
     .eq("id", user.id)
     .single();
 
-  return <ProfileView profile={profile} userId={user.id} />;
+  // Fetch recent vibes (parties where user is a member)
+  const { data: recentMemberships } = await (supabase as any)
+    .from("party_members")
+    .select("party_id, parties(id, location_name, mood, created_at)")
+    .eq("user_id", user.id)
+    .order("joined_at", { ascending: false })
+    .limit(5);
+
+  const recentVibes = (recentMemberships || [])
+    .map((m: any) => m.parties)
+    .filter(Boolean);
+
+  return <ProfileView profile={profile} userId={user.id} recentVibes={recentVibes} />;
 }

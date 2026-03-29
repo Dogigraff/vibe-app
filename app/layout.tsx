@@ -6,23 +6,23 @@ const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
 const siteUrl = raw.startsWith("http") ? raw : `https://${raw}`;
 
 export const metadata: Metadata = {
-  title: "VIBE — Find Your Vibe in 5 Minutes",
+  title: "VIBE — найди свою тусовку за 5 минут",
   description:
-    "Real-time geo-social network. Meet people around you in 5 minutes via Telegram.",
-  keywords: ["geo social", "meet people", "telegram app", "vibe", "nearby", "real-time"],
+    "Геосоциальная сеть реального времени. Находи крутые тусовки и знакомься с людьми рядом через Telegram.",
+  keywords: ["геосоциальная сеть", "тусовки", "telegram mini app", "вайб", "знакомства", "поблизости"],
   metadataBase: new URL(siteUrl),
   openGraph: {
-    title: "VIBE — Find Your Vibe in 5 Minutes",
-    description: "Meet people around you in 5 minutes. Real-time geo-social network.",
+    title: "VIBE — найди свою тусовку за 5 минут",
+    description: "Находи крутые тусовки и знакомься с людьми рядом через Telegram.",
     url: siteUrl,
     siteName: "VIBE",
     type: "website",
-    locale: "en_US",
+    locale: "ru_RU",
   },
   twitter: {
     card: "summary_large_image",
-    title: "VIBE — Find Your Vibe",
-    description: "Meet people around you in 5 minutes.",
+    title: "VIBE — найди свой вайб",
+    description: "Находи тусовки рядом за 5 минут.",
   },
   robots: {
     index: true,
@@ -37,7 +37,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "VIBE",
-  description: "Real-time geo-social network. Find your vibe in 5 minutes.",
+  description: "Геосоциальная сеть реального времени. Найди свою тусовку за 5 минут.",
   applicationCategory: "SocialNetworkingApplication",
   operatingSystem: "Web",
   url: siteUrl,
@@ -54,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"

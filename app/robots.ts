@@ -1,7 +1,4 @@
-import type { MetadataRoute } from "next";
-
-const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
-const siteUrl = raw.startsWith("http") ? raw : `https://${raw}`;
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -10,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/map", "/profile", "/login", "/api/", "/tg-debug"],
     },
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: "https://vibeapp.ru/sitemap.xml",
   };
 }
