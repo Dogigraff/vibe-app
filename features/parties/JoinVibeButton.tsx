@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -84,61 +85,65 @@ export function JoinVibeButton({ partyId, hostId, currentUserId }: JoinVibeButto
     if (currentUserId === hostId) return null;
 
     const variants = {
-        initial: { scale: 0.95, opacity: 0 },
+        initial: { scale: 0.97, opacity: 0 },
         animate: { scale: 1, opacity: 1 },
-        exit: { scale: 0.95, opacity: 0 },
+        exit: { scale: 0.97, opacity: 0 },
     };
+
+    const primaryClass =
+        "w-full min-h-[52px] gap-2 rounded-2xl text-base font-semibold shadow-vibe-accent transition-transform duration-vibe ease-vibe-out active:scale-[0.98]";
 
     return (
         <AnimatePresence mode="wait">
             {status === "idle" && (
-                <motion.div key="idle" variants={variants} initial="initial" animate="animate" exit="exit">
+                <motion.div key="idle" variants={variants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}>
                     <Button
-                        size="sm"
+                        size="lg"
                         onClick={handleJoin}
-                        className="w-full"
+                        className={primaryClass}
                         aria-label="Присоединиться к вайбу"
                     >
-                        🚪 Стучусь
+                        <Smartphone className="h-5 w-5 shrink-0 opacity-95" aria-hidden />
+                        Присоединиться
                     </Button>
                 </motion.div>
             )}
             {status === "loading" && (
-                <motion.div key="loading" variants={variants} initial="initial" animate="animate" exit="exit">
-                    <Button size="sm" disabled className="w-full">
-                        <div className="mr-2 h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
+                <motion.div key="loading" variants={variants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}>
+                    <Button size="lg" disabled className={primaryClass}>
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                         Отправка…
                     </Button>
                 </motion.div>
             )}
             {status === "pending" && (
-                <motion.div key="pending" variants={variants} initial="initial" animate="animate" exit="exit">
-                    <div className="rounded-md bg-yellow-500/10 px-3 py-2 text-center text-xs font-medium text-yellow-600">
-                        ⏳ Запрос отправлен
+                <motion.div key="pending" variants={variants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}>
+                    <div className="rounded-2xl border border-yellow-500/25 bg-yellow-500/10 px-4 py-3 text-center text-sm font-medium text-yellow-500/95">
+                        Запрос отправлен
                     </div>
                 </motion.div>
             )}
             {status === "member" && (
-                <motion.div key="member" variants={variants} initial="initial" animate="animate" exit="exit">
-                    <div className="rounded-md bg-green-500/10 px-3 py-2 text-center text-xs font-medium text-green-600">
-                        ✅ Вы участник
+                <motion.div key="member" variants={variants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}>
+                    <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-center text-sm font-medium text-emerald-400">
+                        Вы в вайбе
                     </div>
                 </motion.div>
             )}
             {status === "rejected" && (
-                <motion.div key="rejected" variants={variants} initial="initial" animate="animate" exit="exit">
-                    <div className="rounded-md bg-red-500/10 px-3 py-2 text-center text-xs font-medium text-red-600">
-                        ❌ Запрос отклонён
+                <motion.div key="rejected" variants={variants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}>
+                    <div className="rounded-2xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-center text-sm font-medium text-red-400">
+                        Запрос отклонён
                     </div>
                 </motion.div>
             )}
             {status === "error" && (
-                <motion.div key="error" variants={variants} initial="initial" animate="animate" exit="exit">
-                    <div className="space-y-1">
-                        <div className="rounded-md bg-destructive/10 px-3 py-2 text-center text-xs text-destructive">
+                <motion.div key="error" variants={variants} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}>
+                    <div className="space-y-2">
+                        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
                             {errorMsg || "Ошибка"}
                         </div>
-                        <Button size="sm" variant="outline" onClick={handleJoin} className="w-full text-xs">
+                        <Button variant="outline" onClick={handleJoin} className="w-full min-h-11 rounded-2xl text-sm">
                             Повторить
                         </Button>
                     </div>

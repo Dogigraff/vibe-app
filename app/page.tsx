@@ -34,47 +34,51 @@ export default async function LandingPage() {
   return (
     <>
       <TelegramRedirect />
-      <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-background">
-        <div className="flex flex-col items-center gap-8 text-center max-w-2xl mx-auto flex-1 justify-center">
-          <h1 className="bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-6xl font-black tracking-tight text-transparent sm:text-7xl">
+      <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-6">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          aria-hidden
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(232,93,117,0.35), transparent 55%), radial-gradient(ellipse 60% 40% at 100% 50%, rgba(139,92,246,0.2), transparent 50%)",
+          }}
+        />
+        <div className="relative z-[1] mx-auto flex max-w-lg flex-1 flex-col items-center justify-center gap-8 text-center">
+          <h1 className="bg-gradient-to-br from-vibe-t1 via-vibe-accent to-vibe-accent-soft bg-clip-text text-5xl font-extrabold tracking-tight text-transparent sm:text-6xl">
             VIBE
           </h1>
-          <p className="text-xl sm:text-2xl font-medium text-foreground">
-            Не будь один. Найди свой вайб за 5 минут.
+          <p className="text-balance text-xl font-semibold leading-snug text-foreground sm:text-2xl">
+            Живые встречи рядом на 5 минут — без бесконечных лент.
           </p>
-          <p className="max-w-md text-base text-muted-foreground">
-            Первая геосоциальная сеть прямо в Telegram. Создавай свои вайбы, присоединяйся к тусовкам поблизости и знакомься с людьми на карте.
+          <p className="max-w-md text-pretty text-base leading-relaxed text-muted-foreground">
+            Геовайбы в Telegram: карта рядом, быстрый join и чат только для участников.
           </p>
 
           <a
             href="/login"
-            className="mt-4 flex h-14 w-full sm:w-auto items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 px-8 text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+            className="mt-2 flex min-h-[52px] w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-primary px-8 text-base font-semibold text-primary-foreground shadow-vibe-accent transition-transform duration-vibe ease-vibe-out hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.98] sm:w-auto"
           >
             Открыть VIBE
           </a>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4 sm:gap-8 text-sm sm:text-base font-medium text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🗺️</span>
-              <span>Карта вайбов</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">🍻</span>
-              <span>Вечеринки</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">💬</span>
-              <span>Чат</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl">⭐</span>
-              <span>Репутация</span>
-            </div>
+          <div className="flex max-w-sm flex-col gap-3 text-left text-sm text-muted-foreground">
+            <p className="flex items-start gap-2">
+              <span className="mt-0.5 text-primary" aria-hidden>
+                ●
+              </span>
+              <span>Геолокация — чтобы показать «рядом сейчас», без лишнего шума.</span>
+            </p>
+            <p className="flex items-start gap-2">
+              <span className="mt-0.5 text-primary" aria-hidden>
+                ●
+              </span>
+              <span>Личные данные видны только в контексте вайба и чата.</span>
+            </p>
           </div>
         </div>
 
         {/* Telegram Mini App Badge */}
-        <div className="mt-12 mb-6 flex items-center justify-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm font-medium text-muted-foreground backdrop-blur-sm">
+        <div className="relative z-[1] mt-10 mb-6 flex items-center justify-center gap-2 rounded-full border border-border/80 bg-secondary/60 px-4 py-2 text-sm font-medium text-muted-foreground backdrop-blur-md">
           <svg
             className="h-5 w-5 text-[#2AABEE]"
             viewBox="0 0 24 24"

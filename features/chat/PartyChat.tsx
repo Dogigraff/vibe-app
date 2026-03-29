@@ -400,15 +400,17 @@ export function PartyChat({ partyId, currentUserId }: PartyChatProps) {
     return (
         <div className="flex h-full flex-col">
             {/* E2E indicator */}
-            <div className="flex items-center gap-1.5 border-b px-3 py-1.5 text-xs text-green-600">
-                <Lock className="h-3 w-3" />
-                <span>E2E шифрование {e2eReady ? "активно" : "настройка…"}</span>
+            <div className="flex items-center gap-1.5 border-b border-border/80 bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+                <Lock className="h-3.5 w-3.5 shrink-0 text-primary" />
+                <span>
+                  Чат только участникам · E2E {e2eReady ? "активно" : "настройка…"}
+                </span>
             </div>
 
             {/* Messages area */}
             <div
                 ref={scrollRef}
-                className="flex-1 space-y-2 overflow-y-auto p-3"
+                className="flex-1 space-y-3 overflow-y-auto p-3"
                 role="log"
                 aria-label="Чат"
             >
@@ -425,13 +427,13 @@ export function PartyChat({ partyId, currentUserId }: PartyChatProps) {
                                 key={msg.id}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.15 }}
+                                transition={{ duration: 0.22, ease: [0.33, 1, 0.68, 1] }}
                                 className={`flex ${isMine ? "justify-end" : "justify-start"}`}
                             >
                                 <div
-                                    className={`max-w-[75%] rounded-lg px-3 py-2 text-sm ${isMine
-                                        ? "bg-primary text-primary-foreground"
-                                        : "bg-muted"
+                                    className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${isMine
+                                        ? "border border-primary/40 bg-primary/15 text-foreground"
+                                        : "border border-border/80 bg-muted/80 text-foreground"
                                         }`}
                                 >
                                     {!isMine && (
@@ -473,7 +475,7 @@ export function PartyChat({ partyId, currentUserId }: PartyChatProps) {
             )}
 
             {/* Input area */}
-            <div className="flex gap-2 border-t p-3">
+            <div className="flex gap-2 border-t border-border/80 bg-background/50 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                 <input
                     ref={inputRef}
                     type="text"
@@ -484,15 +486,16 @@ export function PartyChat({ partyId, currentUserId }: PartyChatProps) {
                     maxLength={1000}
                     disabled={sending || rateLimited || !e2eReady}
                     aria-label="Написать сообщение"
-                    className="flex-1 rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                    className="min-h-11 flex-1 rounded-full border border-border/80 bg-muted/60 px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
                 />
                 <Button
                     size="icon"
                     onClick={handleSend}
                     disabled={!input.trim() || sending || rateLimited || !e2eReady}
                     aria-label="Отправить"
+                    className="shrink-0 rounded-full border-0 bg-primary text-primary-foreground shadow-vibe-accent transition-transform duration-vibe ease-vibe-out hover:bg-primary/90 active:scale-95"
                 >
-                    <Send className="h-4 w-4" />
+                    <Send className="h-5 w-5" />
                 </Button>
             </div>
         </div>

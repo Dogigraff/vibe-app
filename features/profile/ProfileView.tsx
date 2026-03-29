@@ -81,26 +81,39 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="mx-auto max-w-md space-y-5 p-6"
+      className="mx-auto max-w-md space-y-6 px-4 py-6 sm:px-6"
     >
       {/* Avatar & Username */}
-      <div className="flex flex-col items-center gap-3">
-        {profile.avatar_url ? (
-          <img
-            src={profile.avatar_url}
-            alt={profile.username || "Avatar"}
-            className="h-20 w-20 rounded-full border-2 border-primary object-cover shadow-lg"
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative p-1">
+          <div
+            className="absolute inset-0 rounded-full bg-gradient-to-br from-vibe-accent via-vibe-accent-soft to-vibe-accent opacity-90"
+            aria-hidden
           />
-        ) : (
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-muted bg-muted">
-            <User className="h-10 w-10 text-muted-foreground" />
+          <div className="relative rounded-full p-[3px]">
+            {profile.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile.username || "Avatar"}
+                className="h-[7.5rem] w-[7.5rem] rounded-full object-cover shadow-vibe-card"
+              />
+            ) : (
+              <div className="flex h-[7.5rem] w-[7.5rem] items-center justify-center rounded-full bg-gradient-to-br from-muted to-secondary">
+                <User className="h-14 w-14 text-muted-foreground" />
+              </div>
+            )}
           </div>
-        )}
-        <h1 className="text-xl font-bold">{profile.username || "Без имени"}</h1>
+        </div>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {profile.username || "Без имени"}
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">Профиль · репутация и интересы</p>
+        </div>
       </div>
 
       {/* Reputation */}
-      <div className="flex items-center justify-center gap-3 rounded-xl border bg-muted/50 p-4">
+      <div className="flex items-center justify-center gap-3 rounded-2xl border border-border/80 bg-muted/40 p-4 shadow-sm backdrop-blur-sm">
         <ReputationBadge reputation={profile.reputation} />
         <div className="flex flex-col">
           <span className="text-sm font-semibold">{profile.reputation} очков</span>
@@ -108,10 +121,20 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-2">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="aspect-square rounded-2xl border border-border/60 bg-gradient-to-br from-muted/80 to-secondary/60"
+            aria-hidden
+          />
+        ))}
+      </div>
+
       {/* Bio */}
-      <div className="rounded-xl border p-4">
+      <div className="rounded-2xl border border-border/80 bg-card/50 p-4 shadow-sm">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-muted-foreground">О себе</p>
+          <p className="text-sm font-semibold text-muted-foreground">О себе</p>
           {!editing && (
             <button
               type="button"
@@ -138,7 +161,7 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
                 maxLength={200}
                 rows={3}
                 placeholder="Расскажи о себе..."
-                className="w-full rounded-lg border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+                className="w-full resize-none rounded-xl border border-border/80 bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
               <p className="text-right text-xs text-muted-foreground">{bio.length}/200</p>
 
@@ -153,10 +176,10 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
                         key={tag}
                         type="button"
                         onClick={() => toggleTag(tag)}
-                        className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                        className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-vibe ease-vibe-out active:scale-[0.98] ${
                           isSelected
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                            ? "bg-primary text-primary-foreground shadow-vibe-accent"
+                            : "border border-border/60 bg-muted/60 text-muted-foreground hover:bg-muted"
                         }`}
                       >
                         {tag}
@@ -211,7 +234,7 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
 
       {/* Tags (view mode) */}
       {!editing && tags.length > 0 && (
-        <div className="rounded-xl border p-4">
+        <div className="rounded-2xl border border-border/80 bg-card/50 p-4">
           <div className="mb-2 flex items-center gap-1">
             <Tag className="h-4 w-4 text-muted-foreground" />
             <p className="text-sm font-medium text-muted-foreground">Интересы</p>
@@ -220,7 +243,7 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+                className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
               >
                 {tag}
               </span>
@@ -231,7 +254,7 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
 
       {/* Recent vibes */}
       {recentVibes.length > 0 && (
-        <div className="rounded-xl border p-4">
+        <div className="rounded-2xl border border-border/80 bg-card/50 p-4">
           <div className="mb-3 flex items-center gap-1">
             <MapPin className="h-4 w-4 text-muted-foreground" />
             <p className="text-sm font-medium text-muted-foreground">Последние вайбы</p>
@@ -240,7 +263,7 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
             {recentVibes.map((vibe) => (
               <div
                 key={vibe.id}
-                className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2"
+                className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3 py-2.5"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-sm shrink-0">

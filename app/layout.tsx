@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { TelegramInitProvider } from "@/components/providers/TelegramInitProvider";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
 const siteUrl = raw.startsWith("http") ? raw : `https://${raw}`;
@@ -54,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="ru" className={`dark ${inter.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -66,7 +73,7 @@ export default function RootLayout({
           defer
         />
       </head>
-      <body>
+      <body className="font-sans">
         <TelegramInitProvider>{children}</TelegramInitProvider>
       </body>
     </html>

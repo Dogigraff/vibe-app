@@ -25,9 +25,9 @@ export function ThemeToggle() {
         setIsDark(dark);
         document.documentElement.classList.toggle("dark", dark);
       } else {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setIsDark(prefersDark);
-        document.documentElement.classList.toggle("dark", prefersDark);
+        /* VIBE: тёмная тема по умолчанию (как в макете), пока пользователь не выбрал иное */
+        setIsDark(true);
+        document.documentElement.classList.add("dark");
       }
     }
   }, []);

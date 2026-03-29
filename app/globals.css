@@ -2,46 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * VIBE design system (Pencil tokens → shadcn HSL)
+ * Dark = default for Mini App; :root light for редкий переключатель темы.
+ */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 240 20% 98%;
+    --foreground: 240 20% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --card-foreground: 240 20% 8%;
+    --primary: 351 75% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 12% 92%;
+    --secondary-foreground: 240 20% 12%;
+    --muted: 240 12% 92%;
+    --muted-foreground: 240 8% 40%;
+    --accent: 240 12% 92%;
+    --accent-foreground: 240 20% 12%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 10% 88%;
+    --input: 240 10% 88%;
+    --ring: 351 75% 58%;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* #0D0D12 vibe-bg */
+    --background: 240 16% 6%;
+    /* #F4F4F7 vibe-text-1 */
+    --foreground: 240 20% 96%;
+    /* #16161F vibe-surface */
+    --card: 240 17% 10%;
+    --card-foreground: 240 20% 96%;
+    /* #E85D75 vibe-accent */
+    --primary: 351 75% 64%;
+    --primary-foreground: 0 0% 100%;
+    /* #1E1E2A vibe-surface-elevated */
+    --secondary: 240 15% 14%;
+    --secondary-foreground: 240 20% 96%;
+    --muted: 240 15% 14%;
+    /* #A8A8B8 vibe-text-2 */
+    --muted-foreground: 240 10% 70%;
+    --accent: 240 15% 14%;
+    --accent-foreground: 240 20% 96%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+    /* #2A2A38 vibe-border */
+    --border: 240 14% 20%;
+    --input: 240 14% 20%;
+    --ring: 351 75% 64%;
+    --radius: 1rem;
   }
 }
 
@@ -50,6 +62,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply min-h-[100dvh] bg-background text-foreground antialiased;
   }
 }

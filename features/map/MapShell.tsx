@@ -35,16 +35,16 @@ export function MapShell() {
   return (
     <>
       <ProfileKeepAlive />
-      <div className="flex h-[calc(100vh-3.5rem)] flex-col">
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b bg-background px-4 py-2">
-          <div className="flex items-center gap-2">
-            <div className="flex gap-1 rounded-lg bg-muted p-1">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/80 bg-background/80 px-4 py-2.5 backdrop-blur-sm">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <div className="flex gap-1 rounded-xl bg-muted/80 p-1">
               <button
                 type="button"
                 onClick={() => setMyOnly(false)}
-                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-vibe ease-vibe-out ${
                   !myOnly
-                    ? "bg-background text-foreground shadow"
+                    ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -53,9 +53,9 @@ export function MapShell() {
               <button
                 type="button"
                 onClick={() => setMyOnly(true)}
-                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-vibe ease-vibe-out ${
                   myOnly
-                    ? "bg-background text-foreground shadow"
+                    ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -65,12 +65,13 @@ export function MapShell() {
             <Button
               type="button"
               size="sm"
+              className="shrink-0 rounded-xl font-semibold shadow-md"
               onClick={() => setModalOpen(true)}
             >
-              + Создать вайб
+              + Создать
             </Button>
           </div>
-          <span className="text-xs text-muted-foreground">15 км</span>
+          <span className="shrink-0 text-xs font-medium text-muted-foreground">15 км</span>
         </div>
         <div className="min-h-0 flex-1">
           <VibeMap

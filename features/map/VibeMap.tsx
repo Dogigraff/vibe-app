@@ -10,6 +10,8 @@ import { ReportButton } from "@/features/security/ReportButton";
 import { CountdownTimer } from "@/components/countdown-timer";
 import { PartyChat } from "@/features/chat/PartyChat";
 import { motion, AnimatePresence } from "framer-motion";
+import { Lock, MapPinOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const MOSCOW_CENTER: [number, number] = [55.751244, 37.618423];
 const RADIUS_M = 15000;
@@ -233,7 +235,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
 
   // --- Mood filter bar ---
   const FilterBar = (
-    <div className="flex gap-1.5 overflow-x-auto px-4 py-2 scrollbar-hide">
+    <div className="flex gap-2 overflow-x-auto px-4 py-2.5 scrollbar-hide">
       {MOOD_FILTERS.map((filter) => {
         const isActive = activeMoodFilter === filter.key;
         return (
@@ -241,10 +243,10 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
             key={filter.key}
             type="button"
             onClick={() => setActiveMoodFilter(filter.key)}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+            className={`flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold transition-all duration-vibe ease-vibe-out active:scale-[0.98] ${
               isActive
-                ? `${filter.color} text-white shadow-md`
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
+                ? "border-primary bg-primary text-primary-foreground shadow-vibe-accent"
+                : "border-border/80 bg-muted/60 text-muted-foreground hover:border-border hover:bg-muted"
             }`}
           >
             <span>{filter.emoji}</span>
@@ -260,43 +262,52 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
     <AnimatePresence>
       <motion.div
         key={selectedParty.id}
-        initial={{ y: 200, opacity: 0 }}
+        initial={{ y: "110%", opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 200, opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="absolute bottom-4 left-4 right-4 rounded-2xl border bg-background/95 backdrop-blur-md shadow-xl overflow-hidden"
+        exit={{ y: "110%", opacity: 0 }}
+        transition={{ duration: 0.28, ease: [0.33, 1, 0.68, 1] }}
+        className="absolute bottom-0 left-0 right-0 z-20 mx-auto max-h-[min(88dvh,640px)] w-full max-w-lg overflow-hidden rounded-t-3xl border border-border/90 border-b-0 bg-secondary/95 shadow-vibe-card backdrop-blur-xl supports-[padding:max(0px)]:pb-[env(safe-area-inset-bottom)]"
       >
-        {/* Card header */}
-        <div className="p-4">
-          <div className="flex justify-between items-start gap-2">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-lg">{getMoodEmoji(selectedParty.mood)}</span>
-                <p className="font-semibold text-base truncate">
-                  {selectedParty.location_name || "Без названия"}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                {selectedParty.mood && (
-                  <span
-                    className="rounded-full px-2 py-0.5 text-white text-[10px] font-medium"
-                    style={{ backgroundColor: getMoodColor(selectedParty.mood) }}
-                  >
-                    {selectedParty.mood}
-                  </span>
-                )}
-                <span>
-                  📍 {formatDistance(
-                    approxDistanceM(
-                      center[0], center[1],
-                      selectedParty.lat, selectedParty.lng
-                    )
-                  )}
+        <div className="flex flex-col items-center pt-3">
+          <div className="h-1.5 w-10 rounded-full bg-muted-foreground/30" aria-hidden />
+        </div>
+
+        <div className="px-5 pb-2 pt-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+                  {formatDistance(
+                    approxDistanceM(center[0], center[1], selectedParty.lat, selectedParty.lng)
+                  )}{" "}
+                  · сейчас
                 </span>
                 {selectedParty.expires_at && (
-                  <CountdownTimer expiresAt={selectedParty.expires_at} compact />
+                  <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+                    <CountdownTimer expiresAt={selectedParty.expires_at} compact />
+                  </span>
                 )}
               </div>
+              <div className="flex items-start gap-2">
+                <span className="text-2xl leading-none">{getMoodEmoji(selectedParty.mood)}</span>
+                <h2 className="text-balance text-2xl font-bold leading-tight tracking-tight text-foreground">
+                  {selectedParty.location_name || "Вайб без названия"}
+                </h2>
+              </div>
+              {selectedParty.expires_at && (
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-primary">
+                  <span>Осталось</span>
+                  <CountdownTimer expiresAt={selectedParty.expires_at} />
+                </div>
+              )}
+              {selectedParty.mood && (
+                <span
+                  className="mt-2 inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold text-white"
+                  style={{ backgroundColor: getMoodColor(selectedParty.mood) }}
+                >
+                  {selectedParty.mood}
+                </span>
+              )}
             </div>
             <button
               type="button"
@@ -304,7 +315,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
                 setSelectedParty(null);
                 setShowChat(false);
               }}
-              className="rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Закрыть"
             >
               ✕
@@ -312,42 +323,50 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
           </div>
 
           {selectedParty.description && (
-            <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground line-clamp-3">
               {selectedParty.description}
             </p>
           )}
 
-          {/* Full countdown timer */}
-          {selectedParty.expires_at && (
-            <div className="mt-2 flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Осталось:</span>
-              <CountdownTimer expiresAt={selectedParty.expires_at} />
-            </div>
-          )}
+          <div className="mt-4 flex items-start gap-2 rounded-2xl border border-border/60 bg-background/40 px-3 py-2.5">
+            <Lock className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+            <p className="text-xs leading-snug text-muted-foreground">
+              Рядом только сейчас · Чат только участникам · Личные данные под замком
+            </p>
+          </div>
         </div>
 
-        {/* Actions */}
-        <div className="border-t px-4 py-3 space-y-2">
+        <div className="space-y-3 border-t border-border/80 bg-background/30 px-5 py-4">
           <JoinVibeButton
             partyId={selectedParty.id}
             hostId={selectedParty.host_id}
             currentUserId={currentUserId}
           />
-          <div className="flex items-center justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full min-h-[52px] rounded-2xl text-base font-semibold"
+            onClick={() => {
+              setSelectedParty(null);
+              setShowChat(false);
+            }}
+          >
+            Пропустить
+          </Button>
+          <div className="flex items-center justify-between gap-2 pt-1">
             <button
               type="button"
               onClick={() => setShowChat(!showChat)}
-              className="text-xs font-medium text-primary hover:underline"
+              className="text-sm font-semibold text-primary transition-opacity hover:opacity-90"
             >
-              {showChat ? "Скрыть чат" : "💬 Открыть чат"}
+              {showChat ? "Скрыть чат" : "Открыть чат"}
             </button>
             <ReportButton reportedId={selectedParty.id} />
           </div>
         </div>
 
-        {/* Inline chat */}
         {showChat && currentUserId && (
-          <div className="border-t h-72">
+          <div className="h-80 border-t border-border/80">
             <PartyChat partyId={selectedParty.id} currentUserId={currentUserId} />
           </div>
         )}
@@ -357,9 +376,9 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
 
   if (useFakeMap) {
     return (
-      <div className="relative flex h-full w-full flex-col gap-0 min-h-[400px]">
+      <div className="relative flex h-full min-h-[400px] w-full flex-col gap-0">
         {FilterBar}
-        <div className="min-h-0 flex-1 overflow-auto relative">
+        <div className="relative min-h-0 flex-1 overflow-auto">
           <FakeMap
             center={center}
             setCenter={setCenter}
@@ -368,6 +387,31 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
             selectedParty={selectedParty}
             setSelectedParty={setSelectedParty}
           />
+          {loading && (
+            <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 rounded-full border border-border/80 bg-secondary/95 px-4 py-2.5 text-sm shadow-vibe-card backdrop-blur-md">
+              <div className="flex items-center gap-2 text-foreground">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <span className="font-medium">Загрузка…</span>
+              </div>
+            </div>
+          )}
+          {!loading && filteredParties.length === 0 && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6">
+              <div className="max-w-xs rounded-3xl border border-border/80 bg-secondary/95 p-6 text-center shadow-vibe-card backdrop-blur-md">
+                <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-3xl border border-border/60 bg-muted/50">
+                  <MapPinOff className="h-11 w-11 text-muted-foreground" aria-hidden />
+                </div>
+                <p className="text-lg font-bold text-foreground">
+                  {activeMoodFilter !== "all" ? "Никого с этим фильтром" : "Пока тихо"}
+                </p>
+                <p className="mt-2 text-sm leading-snug text-muted-foreground">
+                  {activeMoodFilter !== "all"
+                    ? `Попробуйте другой фильтр или сдвиньте карту.`
+                    : "Нет активных вайбов рядом. Создайте свой или зайдите позже."}
+                </p>
+              </div>
+            </div>
+          )}
           {VibeCard}
         </div>
         {SHOW_DEV_DEBUG && (
@@ -434,21 +478,29 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
         </YMaps>
 
         {loading && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 rounded-full bg-background/90 px-4 py-2 text-sm shadow-md backdrop-blur-sm">
-            <div className="flex items-center gap-2">
+          <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 rounded-full border border-border/80 bg-secondary/95 px-4 py-2.5 text-sm shadow-vibe-card backdrop-blur-md">
+            <div className="flex items-center gap-2 text-foreground">
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              <span>Загрузка…</span>
+              <span className="font-medium">Загрузка…</span>
             </div>
           </div>
         )}
 
         {!loading && filteredParties.length === 0 && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="rounded-xl bg-background/90 px-5 py-3 text-sm text-muted-foreground shadow-md backdrop-blur-sm">
-              {activeMoodFilter !== "all"
-                ? `Нет вайбов с фильтром «${MOOD_FILTERS.find(f => f.key === activeMoodFilter)?.label}» поблизости`
-                : "Поблизости нет активных вайбов"}
-            </p>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6">
+            <div className="max-w-xs rounded-3xl border border-border/80 bg-secondary/95 p-6 text-center shadow-vibe-card backdrop-blur-md">
+              <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-3xl border border-border/60 bg-muted/50">
+                <MapPinOff className="h-11 w-11 text-muted-foreground" aria-hidden />
+              </div>
+              <p className="text-lg font-bold text-foreground">
+                {activeMoodFilter !== "all" ? "Никого с этим фильтром" : "Пока тихо"}
+              </p>
+              <p className="mt-2 text-sm leading-snug text-muted-foreground">
+                {activeMoodFilter !== "all"
+                  ? `Попробуйте другой фильтр или сдвиньте карту.`
+                  : "Нет активных вайбов рядом. Создайте свой или зайдите позже."}
+              </p>
+            </div>
           </div>
         )}
 
