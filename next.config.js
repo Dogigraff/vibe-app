@@ -2,10 +2,10 @@
 
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://telegram.org https://api-maps.yandex.ru https://*.yandex.ru https://*.yandex.net;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://telegram.org https://api-maps.yandex.ru https://*.yandex.ru https://*.yandex.net https://yastatic.net https://*.yastatic.net;
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://*.telegram.org https://*.yandex.net https://*.yandex.ru https://*.supabase.co;
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api-maps.yandex.ru https://*.yandex.ru https://*.yandex.net;
+  img-src 'self' data: blob: https://*.telegram.org https://*.yandex.net https://*.yandex.ru https://*.supabase.co https://yastatic.net https://*.yastatic.net;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api-maps.yandex.ru https://*.yandex.ru https://*.yandex.net https://yastatic.net https://*.yastatic.net;
   frame-ancestors 'self' https://telegram.org https://web.telegram.org https://*.telegram.org;
   worker-src 'self' blob:;
 `.replace(/\n/g, '').replace(/\s{2,}/g, ' ').trim();
