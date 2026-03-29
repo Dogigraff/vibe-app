@@ -59,10 +59,7 @@ export function AvatarUpload({
   const initial = username ? username.charAt(0).toUpperCase() : "V";
 
   return (
-    <div
-      className={`relative group ${disabled || uploading ? '' : 'cursor-pointer'}`}
-      onClick={() => !disabled && !uploading && fileInputRef.current?.click()}
-    >
+    <div className="relative group w-[7.5rem] h-[7.5rem]">
       {currentUrl && !imgError ? (
         <img
           src={currentUrl}
@@ -96,15 +93,18 @@ export function AvatarUpload({
         </div>
       )}
 
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept="image/*"
-        aria-label="Загрузить аватар"
-        className="hidden"
-        disabled={disabled || uploading}
-      />
+      {/* Native file input overlaid on top */}
+      {!disabled && !uploading && (
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="image/*"
+          aria-label="Загрузить аватар"
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0 z-10"
+          title=""
+        />
+      )}
     </div>
   );
 }
