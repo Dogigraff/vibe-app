@@ -7,8 +7,10 @@ const protectedPaths = ["/map", "/profile"];
 const noindexPaths = ["/map", "/profile", "/login", "/tg-debug"];
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
   // Production: hide /tg-debug (debug page)
-  if (request.nextUrl.pathname === "/tg-debug") {
+  if (pathname === "/tg-debug") {
     if (
       process.env.NODE_ENV === "production" ||
       process.env.NEXT_PUBLIC_DEV_TEST_MODE !== "true"
@@ -29,6 +31,17 @@ export async function updateSession(request: NextRequest) {
     return applyNoindex(request, NextResponse.next({ request }));
   }
 
+  // Only call Supabase auth for protected paths to avoid unnecessary latency
+  const isProtectedPath = protectedPaths.some((path) =>
+    pathname.startsWith(path)
+  );
+
+  if (!isProtectedPath) {
+    // Non-protected paths: no need to call Supabase, just pass through
+    return applyNoindex(request, NextResponse.next({ request }));
+  }
+
+  // Protected path — need to check auth
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -59,11 +72,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isProtectedPath = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (!user && isProtectedPath) {
+  if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
