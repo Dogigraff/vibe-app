@@ -17,6 +17,7 @@ export function AvatarUpload({
   disabled = false,
 }: AvatarUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +46,7 @@ export function AvatarUpload({
         throw new Error(data.error || "Ошибка загрузки");
       }
 
+      setImgError(false);
       onSuccess(data.url);
     } catch (err: any) {
       alert(err.message || "Не удалось загрузить фото");
@@ -61,10 +63,11 @@ export function AvatarUpload({
       className={`relative group ${disabled || uploading ? '' : 'cursor-pointer'}`}
       onClick={() => !disabled && !uploading && fileInputRef.current?.click()}
     >
-      {currentUrl ? (
+      {currentUrl && !imgError ? (
         <img
           src={currentUrl}
           alt={username || "Avatar"}
+          onError={() => setImgError(true)}
           className={`h-[7.5rem] w-[7.5rem] rounded-full border-2 border-primary object-cover shadow-lg transition-opacity ${
             uploading ? "opacity-50" : disabled ? "" : "group-hover:opacity-80"
           }`}
