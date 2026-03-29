@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { TelegramInitProvider } from "@/components/providers/TelegramInitProvider";
 import "./globals.css";
@@ -11,6 +11,14 @@ const inter = Inter({
 
 const raw = process.env.NEXT_PUBLIC_SITE_URL || "https://vibe.app";
 const siteUrl = raw.startsWith("http") ? raw : `https://${raw}`;
+
+/** Нужно для env(safe-area-inset-*) на iOS внутри WebView / Telegram */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "VIBE — найди свою тусовку за 5 минут",

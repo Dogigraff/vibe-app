@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark, SearchControl } from "@pbe/react-yandex-maps";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { FakeMap } from "@/features/map/FakeMap";
@@ -213,12 +213,8 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
 
   const mapState = { center, zoom };
 
-  const apiKey =
-    typeof process !== "undefined"
-      ? process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY
-      : "";
-  const useFakeMap =
-    process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true" || !apiKey;
+  const apiKey = typeof process !== "undefined" ? process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY : "";
+  const useFakeMap = process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true" && !apiKey;
 
   const [devLastJson, setDevLastJson] = useState<string>("{}");
   const fetchDevHealth = useCallback(async () => {
@@ -235,7 +231,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
 
   // --- Mood filter bar ---
   const FilterBar = (
-    <div className="flex gap-2 overflow-x-auto px-4 py-2.5 scrollbar-hide">
+    <div className="flex gap-2 overflow-x-auto py-2.5 ps-[calc(1rem+max(env(safe-area-inset-left,0px),var(--tg-pad-left,0px)))] pe-[calc(1rem+max(env(safe-area-inset-right,0px),var(--tg-pad-right,0px)))] scrollbar-hide">
       {MOOD_FILTERS.map((filter) => {
         const isActive = activeMoodFilter === filter.key;
         return (
@@ -266,13 +262,13 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: "110%", opacity: 0 }}
         transition={{ duration: 0.28, ease: [0.33, 1, 0.68, 1] }}
-        className="absolute bottom-0 left-0 right-0 z-20 mx-auto max-h-[min(88dvh,640px)] w-full max-w-lg overflow-hidden rounded-t-3xl border border-border/90 border-b-0 bg-secondary/95 shadow-vibe-card backdrop-blur-xl supports-[padding:max(0px)]:pb-[env(safe-area-inset-bottom)]"
+        className="absolute bottom-0 left-0 right-0 z-20 mx-auto max-h-[min(88dvh,640px)] w-full max-w-lg overflow-hidden rounded-t-3xl border border-border/90 border-b-0 bg-secondary/95 pb-[max(env(safe-area-inset-bottom,0px),var(--tg-pad-bottom,0px))] shadow-vibe-card backdrop-blur-xl"
       >
         <div className="flex flex-col items-center pt-3">
           <div className="h-1.5 w-10 rounded-full bg-muted-foreground/30" aria-hidden />
         </div>
 
-        <div className="px-5 pb-2 pt-3">
+        <div className="pb-2 pt-3 ps-[calc(1.25rem+max(env(safe-area-inset-left,0px),var(--tg-pad-left,0px)))] pe-[calc(1.25rem+max(env(safe-area-inset-right,0px),var(--tg-pad-right,0px)))]">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -336,7 +332,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
           </div>
         </div>
 
-        <div className="space-y-3 border-t border-border/80 bg-background/30 px-5 py-4">
+        <div className="space-y-3 border-t border-border/80 bg-background/30 py-4 ps-[calc(1.25rem+max(env(safe-area-inset-left,0px),var(--tg-pad-left,0px)))] pe-[calc(1.25rem+max(env(safe-area-inset-right,0px),var(--tg-pad-right,0px)))]">
           <JoinVibeButton
             partyId={selectedParty.id}
             hostId={selectedParty.host_id}
@@ -448,7 +444,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
     <div className="relative h-full w-full min-h-[400px] flex flex-col">
       {FilterBar}
       <div className="min-h-0 flex-1 relative">
-        <YMaps query={{ apikey: apiKey || undefined }}>
+        <YMaps query={{ apikey: apiKey || undefined, load: "package.full" }}>
           <Map
             defaultState={mapState}
             state={mapState}
@@ -457,6 +453,7 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
             className="absolute inset-0"
             onBoundschange={handleBoundsChange}
           >
+            <SearchControl options={{ float: "right" }} />
             {filteredParties.map((p) => (
               <Placemark
                 key={p.id}

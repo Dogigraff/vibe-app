@@ -13,7 +13,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+    <nav className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center px-[calc(1rem+max(env(safe-area-inset-left,0px),var(--tg-pad-left,0px)))] pb-[calc(0.75rem+max(env(safe-area-inset-bottom,0px),var(--tg-pad-bottom,0px)))] pe-[calc(1rem+max(env(safe-area-inset-right,0px),var(--tg-pad-right,0px)))]">
       <div className="pointer-events-auto flex h-[62px] w-full max-w-md items-center justify-around rounded-[36px] border border-border/90 bg-secondary/95 px-2 shadow-lg backdrop-blur-md supports-[backdrop-filter]:bg-secondary/80">
         {navItems.map(({ href, label, Icon }) => {
           const isActive = pathname?.startsWith(href);

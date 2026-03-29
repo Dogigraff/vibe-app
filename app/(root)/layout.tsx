@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-background pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+    <div className="flex min-h-[100dvh] flex-col bg-background pb-[calc(5.5rem+max(env(safe-area-inset-bottom,0px),var(--tg-pad-bottom,0px)))]">
       <Header />
       <main className="flex min-h-0 flex-1 flex-col">{children}</main>
       <BottomNav />

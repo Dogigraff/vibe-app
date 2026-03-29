@@ -5,6 +5,7 @@ import { User, Star, Tag, Shield, ShieldAlert, Pencil, Check, X, MapPin } from "
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { AvatarUpload } from "@/features/profile/AvatarUpload";
 import type { Profile } from "@/types/db";
 
 interface ProfileViewProps {
@@ -35,6 +36,7 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
   const [editing, setEditing] = useState(false);
   const [bio, setBio] = useState(profile?.bio || "");
   const [tags, setTags] = useState<string[]>(profile?.tags || []);
+  const [localAvatarUrl, setLocalAvatarUrl] = useState<string | null>(profile?.avatar_url || null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -91,17 +93,12 @@ export function ProfileView({ profile, userId, recentVibes = [] }: ProfileViewPr
             aria-hidden
           />
           <div className="relative rounded-full p-[3px]">
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={profile.username || "Avatar"}
-                className="h-[7.5rem] w-[7.5rem] rounded-full object-cover shadow-vibe-card"
-              />
-            ) : (
-              <div className="flex h-[7.5rem] w-[7.5rem] items-center justify-center rounded-full bg-gradient-to-br from-muted to-secondary">
-                <User className="h-14 w-14 text-muted-foreground" />
-              </div>
-            )}
+            <AvatarUpload
+              currentUrl={localAvatarUrl}
+              username={profile.username || ""}
+              disabled={!editing}
+              onSuccess={(url) => setLocalAvatarUrl(url)}
+            />
           </div>
         </div>
         <div className="text-center">

@@ -36,7 +36,7 @@ export function MapShell() {
     <>
       <ProfileKeepAlive />
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/80 bg-background/80 px-4 py-2.5 backdrop-blur-sm">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/80 bg-background/80 py-2.5 ps-[calc(1rem+max(env(safe-area-inset-left,0px),var(--tg-pad-left,0px)))] pe-[calc(1rem+max(env(safe-area-inset-right,0px),var(--tg-pad-right,0px)))] backdrop-blur-sm">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <div className="flex gap-1 rounded-xl bg-muted/80 p-1">
               <button
