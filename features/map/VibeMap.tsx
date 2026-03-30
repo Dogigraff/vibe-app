@@ -211,7 +211,8 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
       ? parties
       : parties.filter((p) => getMoodKey(p.mood) === activeMoodFilter);
 
-  const mapState = { center, zoom };
+  // controls: [] removes all default clutter (traffic, layers, zoom, ruler, etc)
+  const mapState = { center, zoom, controls: [] };
 
   const apiKey = typeof process !== "undefined" ? process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY : "";
   const useFakeMap = process.env.NEXT_PUBLIC_DEV_TEST_MODE === "true" && !apiKey;
