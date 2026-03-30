@@ -29,10 +29,14 @@ export async function GET(request: Request) {
       searchUrl.searchParams.set("apikey", searchApiKey);
       searchUrl.searchParams.set("text", query);
       searchUrl.searchParams.set("lang", "ru_RU");
-      searchUrl.searchParams.set("results", "5");
-      // Optionally restrict to Russia, but 'lang' usually helps ranking Russian places first.
+      // Priority to Russia / Moscow, and type biz
+      searchUrl.searchParams.set("type", "biz,geo");
+      // Restrict/Prioritize Russia (approximate BBOX of RF)
+      searchUrl.searchParams.set("rspn", "0"); // 0 means prioritize, 1 means strict restrict. 0 is safer.
+      searchUrl.searchParams.set("ll", "37.615560,55.752220"); // Center on Moscow
+      searchUrl.searchParams.set("spn", "30.0,30.0"); // Broad span
       
-      const res = await fetch(searchUrl.toString(), { next: { revalidate: 300 } });
+      const res = await fetch(searchUrl.toString(), { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         const features = data?.features || [];
@@ -65,8 +69,10 @@ export async function GET(request: Request) {
       geocodeUrl.searchParams.set("geocode", query);
       geocodeUrl.searchParams.set("results", "5");
       geocodeUrl.searchParams.set("lang", "ru_RU");
+      geocodeUrl.searchParams.set("ll", "37.615560,55.752220");
+      geocodeUrl.searchParams.set("spn", "30.0,30.0");
 
-      const geocodeRes = await fetch(geocodeUrl.toString(), { next: { revalidate: 300 } });
+      const geocodeRes = await fetch(geocodeUrl.toString(), { cache: "no-store" });
       if (geocodeRes.ok) {
         const geocodeData = await geocodeRes.json();
         const members = geocodeData?.response?.GeoObjectCollection?.featureMember ?? [];
