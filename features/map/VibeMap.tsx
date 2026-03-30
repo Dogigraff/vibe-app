@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { YMaps, Map, Placemark, SearchControl } from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { FakeMap } from "@/features/map/FakeMap";
@@ -454,7 +454,6 @@ export function VibeMap({ my = false, onCenterChange, refreshKey }: VibeMapProps
             className="absolute inset-0"
             onBoundschange={handleBoundsChange}
           >
-            <SearchControl options={{ float: "right" }} />
             {filteredParties.map((p) => (
               <Placemark
                 key={p.id}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +39,11 @@ interface CreateVibeModalProps {
   onCreated: () => void;
 }
 
+interface YMapsSuggestion {
+  value: string;
+  displayName: string;
+}
+
 export function CreateVibeModal({
   open,
   onOpenChange,
@@ -52,8 +57,85 @@ export function CreateVibeModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Yandex geocoding states
+  const [suggestions, setSuggestions] = useState<YMapsSuggestion[]>([]);
+  const [overrideCenter, setOverrideCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const skipSuggestRef = useRef(false);
+
   const descLen = description.length;
   const descValid = descLen >= MIN_DESC && descLen <= MAX_DESC;
+
+  // Cleanup on close
+  useEffect(() => {
+    if (!open) {
+      setSuggestions([]);
+      setOverrideCenter(null);
+      setLocationName("");
+      setDescription("");
+    }
+  }, [open]);
+
+  // Handle autocomplete debouncing & fetching
+  useEffect(() => {
+    if (skipSuggestRef.current) {
+      skipSuggestRef.current = false;
+      return;
+    }
+    const query = locationName.trim();
+    if (query.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+
+    const ymaps = (window as any).ymaps;
+    if (!ymaps || typeof ymaps.suggest !== "function") return;
+
+    setIsSearching(true);
+    const timeout = setTimeout(() => {
+      ymaps
+        .suggest(query)
+        .then((items: any[]) => {
+          setSuggestions(
+            items.map((i) => ({ value: i.value, displayName: i.displayName }))
+          );
+          setIsSearching(false);
+        })
+        .catch(() => setIsSearching(false));
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [locationName]);
+
+  const handleSelectSuggestion = async (suggestion: YMapsSuggestion) => {
+    skipSuggestRef.current = true;
+    setLocationName(suggestion.value);
+    setSuggestions([]);
+
+    const ymaps = (window as any).ymaps;
+    if (!ymaps || typeof ymaps.geocode !== "function") return;
+
+    try {
+      const res = await ymaps.geocode(suggestion.value);
+      const firstObject = res.geoObjects.get(0);
+      if (firstObject) {
+        const coords = firstObject.geometry.getCoordinates();
+        // Yandex coordinates usually [lat, lng]
+        setOverrideCenter({ lat: coords[0], lng: coords[1] });
+      }
+    } catch (e) {
+      console.error("Yandex Geocode error", e);
+    }
+  };
+
+  const handleLocationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocationName(e.target.value);
+    // If user modifies input after picking a location, revert to map center
+    if (overrideCenter) setOverrideCenter(null);
+  };
+
+  const currentLat = overrideCenter?.lat ?? center.lat;
+  const currentLng = overrideCenter?.lng ?? center.lng;
 
   const doCreate = async (): Promise<Response> => {
     return fetch("/api/parties/create", {
@@ -64,8 +146,8 @@ export function CreateVibeModal({
         mood,
         description: description.trim(),
         location_name: locationName.trim() || undefined,
-        lat: center.lat,
-        lng: center.lng,
+        lat: currentLat,
+        lng: currentLng,
         expires_in_hours: expiresInHours,
       }),
     });
@@ -168,23 +250,42 @@ export function CreateVibeModal({
               ))}
             </select>
           </div>
-          <div>
+          <div className="relative">
             <label className="mb-1 block text-sm font-medium">
               Место (опционально)
             </label>
-            <Input
-              value={locationName}
-              onChange={(e) => setLocationName(e.target.value)}
-              placeholder="Название места"
-            />
+            <div className="relative">
+              <Input
+                value={locationName}
+                onChange={handleLocationInputChange}
+                placeholder="Адрес или название заведения..."
+                className="pr-8"
+              />
+              {isSearching && (
+                <div className="absolute right-3 top-2.5 h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              )}
+            </div>
+            {suggestions.length > 0 && (
+              <ul className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-border bg-popover text-popover-foreground shadow-md">
+                {suggestions.map((s, idx) => (
+                  <li
+                    key={idx}
+                    onClick={() => handleSelectSuggestion(s)}
+                    className="cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                  >
+                    {s.displayName}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium">
-              Координаты (центр карты)
+              Координаты {overrideCenter ? "(определены по адресу)" : "(центр карты)"}
             </label>
             <div className="flex gap-2 text-sm text-muted-foreground">
-              <span>lat: {center.lat.toFixed(5)}</span>
-              <span>lng: {center.lng.toFixed(5)}</span>
+              <span>lat: {currentLat.toFixed(5)}</span>
+              <span>lng: {currentLng.toFixed(5)}</span>
             </div>
           </div>
           {error && (
