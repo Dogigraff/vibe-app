@@ -261,7 +261,7 @@ export function CreateVibeModal({
           </div>
 
           {/* ===== LOCATION SEARCH ===== */}
-          <div className="relative">
+          <div>
             <label className="mb-1 block text-sm font-medium">
               <Search className="mb-0.5 mr-1.5 inline h-3.5 w-3.5" />
               Место
@@ -276,7 +276,7 @@ export function CreateVibeModal({
                     {selectedPlace.name}
                   </p>
                   {selectedPlace.description && (
-                    <p className="mt-0.5 text-xs text-muted-foreground truncate">
+                    <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">
                       {selectedPlace.description}
                     </p>
                   )}
@@ -284,14 +284,14 @@ export function CreateVibeModal({
                 <button
                   type="button"
                   onClick={handleClearPlace}
-                  className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="shrink-0 rounded-full p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   aria-label="Убрать место"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
             ) : (
-              <>
+              <div>
                 <div className="relative">
                   <Input
                     value={locationQuery}
@@ -308,21 +308,21 @@ export function CreateVibeModal({
                   )}
                 </div>
 
-                {/* Dropdown results */}
+                {/* Inline results list — pushes content down naturally */}
                 {showResults && searchResults.length > 0 && (
-                  <ul className="absolute left-0 right-0 z-50 mt-1 max-h-52 overflow-auto rounded-xl border border-border bg-popover shadow-lg">
+                  <ul className="mt-2 max-h-48 overflow-auto rounded-xl border border-border/80 bg-popover divide-y divide-border/40">
                     {searchResults.map((place, idx) => (
                       <li
                         key={idx}
                         onClick={() => handleSelectPlace(place)}
-                        className="flex cursor-pointer items-start gap-2.5 px-3 py-2.5 transition-colors hover:bg-accent/60"
+                        className="flex cursor-pointer items-start gap-2.5 px-3 py-2.5 transition-colors hover:bg-accent/60 active:bg-accent"
                       >
                         <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary/70" />
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-foreground leading-snug">
                             {place.name}
                           </p>
-                          <p className="truncate text-xs text-muted-foreground">
+                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1">
                             {place.description}
                           </p>
                         </div>
@@ -330,7 +330,7 @@ export function CreateVibeModal({
                     ))}
                   </ul>
                 )}
-              </>
+              </div>
             )}
 
             {!selectedPlace && locationQuery.length > 0 && locationQuery.length < 3 && (
